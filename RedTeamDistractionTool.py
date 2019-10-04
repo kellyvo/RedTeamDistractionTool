@@ -10,37 +10,47 @@ import ctypes
 import keyboard
 import os
 import platform as p
-from playsound import playsound as play
+from playsound import playsound
 import random as r
 import string
 from threading import Thread
+import time
 
 
 '''
 lockScreen locks the computer screen
 '''
 def lockScreen():
-    # Error handler
-    try:
-        # If the system platform is linux
-        if p.system().lower() == 'linux':
-            # Lock screen
-            os.popen('gnome-screensaver-command --lock')
-        # If the system platform is windows
-        if p.system().lower() == 'windows':
-            # Lock screen
-            ctypes.windll.user32.LockWorkStation()
-    # Catches error by passing
-    except:
-        pass
+    # Constantly locks screen every so often
+    while True:
+        # Error handler
+        try:
+            # Pick a random number for the program to wait until it locks the
+            # computer screen again
+            secs = r.randint(1, 61)
+            # If the system platform is linux
+            if p.system().lower() == 'linux':
+                # Lock screen
+                os.popen('gnome-screensaver-command --lock')
+            # If the system platform is windows
+            if p.system().lower() == 'windows':
+                # Lock screen
+                ctypes.windll.user32.LockWorkStation()
+            # Waits a secs amount of time before locking the computer screen again
+            time.sleep(secs)
+        # Catches error by passing
+        except:
+            pass
 
 
 '''
 playSound plays the sound
 '''
 def playSound():
-    # Plays Dial.mp3
-    play('Dial.mp3')
+    # Contantly plays sound
+    while True:
+        # Plays Dial.mp3
+        playsound('Dial.mp3')
 
 
 '''
@@ -66,12 +76,18 @@ def keyPressed(key):
 main runs program
 '''
 def main():
-    # New thread is created so that the program can play the sound and move
-    # on to the other lines of code, instead of waiting for the sound to end.
-    thread = Thread(target=playSound)
-    thread.start()
-    # Locks the computer screen
-    lockScreen()
+    # play is a new thread is created so that the program can play the
+    # sound and move on to the other lines of code, instead of waiting
+    # for the sound to end.
+    play = Thread(target=playSound)
+    play.start()
+
+    # lock is a new thread is created so that the program can lock the
+    # screen every so often and move on to the other lines of code,
+    # instead of waiting for the screen to lock every so often.
+    lock = Thread(target=lockScreen)
+    lock.start()
+
     # Constantly waiting for keyboard input so that the program can mimic the
     # keyboard
     while True:
