@@ -1,4 +1,4 @@
-"RedTeamDistractionTool" 
+Red Team Distraction Tool 
 
 Description: A destructive/distracting red team tool that will play an annoying sound,
             lock your computer screen, and manipulate keyboard input.
